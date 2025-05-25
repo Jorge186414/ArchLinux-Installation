@@ -83,9 +83,17 @@ Para conectarnos a internet mediante cable Etherner solo tenemos que conectarlo 
 1. Listamos los discos disponibles: 
         ``` 
         fdisk -l
-        ``` 
+        ```
+    
+    1.1.Nos apareceran todos los discos disponibles en nuestro equipo, si ya lo tenemos particionado sera facil reconocer el disco, en caso de que no buscamos el nombre o marca de nuestro disco princi
 2. Ya con el nombre del disco accedemos a el con **cfdisk**: 
         ``` 
-        cfdisk 
+        cfdisk /dev/sda
         ```     
-3. Particiones. En lo que son las particiones vamos a tener 
+3. **Particiones**. En lo que son las particiones vamos a tener que crear 2 particiones nuevas:
+
+    3.1. Una particion de al menos 8 Gb para swap, y en tipo de particion colocamos **linux swap**
+
+    3.2. La particion principal para linux, esta puede ser del espacio libre restante en nuestro disco y sera de tipo **Sistema de ficheros de linux**
+
+    
