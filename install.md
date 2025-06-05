@@ -125,3 +125,84 @@ Una ves que tenemos las particiones listas tendremos que pasar a montarlas para 
     ```
     mount /dev/particion_efi /mnt/boot/efi
     ```
+
+### Instalacion
+Para comenzar con la instalacion descargaremos e instalaremos **pacstrap** y con este se hara una instalacion basica de ArchLinux.
+```
+pacstrap /mnt base base-devel nano
+```
+
+#### Kernel de linux
+Para instalar un kernel tenemos una gran variedad de kernels, para saber mas sobre estos y decidir mejor cual instalar [visita el siguiente](https://wiki.archlinux.org/title/Kernel). En mi caso instalare el kernel **zen**.
+
+```
+pacstrap /mnt linux-firmware linux-zen linux-zen-headers mkinitcpio
+```
+
+#### Montaje de los discos
+A pesar de que ya hallamos montado los discos para la instalacion, al momento de apagar y prender nuestra computadora estos se desmontan por lo que es necesario volver a montarlos, para lo cual usaremos una herramienta llamada **genfstab**.
+```
+genfstab -p /mnt >> /mnt/etc/fstab
+```
+Ya que ejecutamos este comando al ver el contenid0o de la carpeta **fstab** con
+    ```
+    cat /mnt/etc/fstab
+    ```
+veremos el orden en el que se van a ir montando las particiones de nuestro disco al arranque de la computadora.
+
+### Segunda fase de instalacion.
+Ya que llegamos a este punto tenemos un Arch muy basico instalado por lo que lo siguiente sera hacer una instalacion sobre esta instalacion, suena un poco confuso, pero hasta este punto seguimos en una instalacion en un disco externo de arranque ya sea una memoria usb, cd o el inicio de una maquina virtual, pero de aqui en adelante ya haremos la instalacion sobre la particion que montamos de nuestro disco por lo que esto ya empezara a darle forma a nuestra instalacion de Arch.
+
+Para entrar a esta segunda fase vamos a entrar con **arch-chroot** a nuestro punto de montaje estandar de linux: 
+    ```
+    arch-chroot /mnt
+    ```
+
+Si configuramos la instalacion en español y con una distribucion de teclado en español vamos a repetir los primeros pasos en la parte de **Configuracion de teclado e Idioma**, en caso contrario podemos seguir.
+
+#### Configuracion de la Zona Horaria
+Para saber la zona horaria en la que estamos con exactitud antes de hacer este paso [entra al siguiente link](https://ipapi.co/timezone), esto nos dara la zona horario que tenemos que configurar.
+-  Ejecuta el siguiente comando:
+    ```
+    ln -sf /usr/share/zoneinfo/America/zona_horaria_obtenida
+    ```
+- Ahora para comprobar que este cambio se aplico ejecutamos el siguiente comando:
+    ```
+    ls -l /etc/localtime
+    ```
+    y aqui deberemos de ver el enlace que hicimos en el paso anterior junto con la zona horaria real que obtuvimos.
+- Por ultimo para sincronizar los relojes utilizamos **hwclock -w**
+
+#### Nombre de usuario y de equipo: 
+1. Para configurar el nombre del equipo y el nombre del usuario lo que tenemos que hacer sera mandar el nombre de estos a un archivo en especifico.
+    - 1. Para el nombre del equipo mandaremos el valor del nombre al archivo **hostname**:
+                ```
+                echo nombre_equipo > /etc/hostname
+                ```
+    y vemos que exista el nombre ejecutando el comando cat hacia el archivo que acabamos de configurar:
+                ```
+                cat /etc/hostname
+                ```
+    - 2. Para agregar un nuevo usuario vamos a utilizar el comando useradd, este agregara al usuario con ciertos privilegios, puedes leer la documentacion mas detallada [aqui](https://wiki.archlinux.org/title/Users_and_groups). Para hacer esto ejecuta el siguiente comando:
+                ```
+                useradd -m -g users -G wheel -s /bin/zsh nombre_usuario
+                ```
+    - 3. Ahora lo que tenemos que hacer sera darle una contrasena al usuario que acabamos de crear y al usuario root para esto ejecutamos el siguiente comando:
+                ```
+                passwd nombre_usuario
+                ```
+    En **nombre_usuario** lo vamos a cambiar por el usuario que acabamos de agregar y por root para actualizar su contrasena.
+    - 4. Para finalizar con los usuarios lo que tenemos que hacer sera darle acceso a root al nuevo usuario para esto vamos a modificar el archivo **/etc/sudoers** con algun editor de texto. Una vez abierto el archivo vamos a buscar la seccion de especificacion de privilegios de usuario, dependiendo de como seteamos el idioma nos aparecera en ingles o espanol, ya que encontremos esta seccion vamos a crear una nueva linea igual a la que tenemos con el usuario de root, solo que en lugar de poner **root** vamos a poner el usuario que creamos, ejemplo: 
+                ```
+                nombre_usuario ALL=(AL:ALL) ALL
+                ```
+
+#### Instalacion de herramientas de red.
+Para poder gestionar la conexion a internet vamos a utilizar varias herramientas, las que para instalarlas ejecutamos el siguiente comando:
+```
+pacman -S dhcp dhcpcd networkmanager iwd
+```
+Y para que estas se activen al arranque o encendido de nuestra computadora ejecutamos lo siguiente:
+```
+systemctl enable dhcpcd NetworkManager iwd
+```
