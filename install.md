@@ -96,4 +96,32 @@ Para conectarnos a internet mediante cable Etherner solo tenemos que conectarlo 
 
     3.2. La particion principal para linux, esta puede ser del espacio libre restante en nuestro disco y sera de tipo **Sistema de ficheros de linux**
 
-    
+#### Formato y Montaje de las particiones
+Una ves que tenemos las particiones listas tendremos que pasar a montarlas para que linux las reconozca
+1. La particion con tipo **Sistema de ficheros de linux** la vamos a formatear con Fourth Extended Filesystem (Ext4) y la montaremos en /mnt/ :
+    - Formateo:
+        ``` 
+        mkfs.ext4 /dev/particion_root
+        ```
+    - Montaje: 
+        ``` 
+        mount /dev/particion_root /mnt/
+        ```
+2. Con la particion para Linux Swap igualmente tenemos que formatearla y activarla:
+    - Formateo:
+        ``` 
+        mkswap /dev/particion_swap
+        ```
+    - Montaje: 
+        ``` 
+        swapon /dev/particion_swap
+        ```
+3. Para la particion EFI vamos a ocupar la misma que crea Windows por defecto solo que la montaremos en una ubicacion en especifico:
+    - Creacion de la carpeta de montaje:
+    ```
+    mkdir -p /mnt/boot/efi
+    ```
+    - Montaje:
+    ```
+    mount /dev/particion_efi /mnt/boot/efi
+    ```
