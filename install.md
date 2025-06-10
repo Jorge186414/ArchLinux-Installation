@@ -237,7 +237,7 @@ grub-mkconfig -o /boot/grub/grub.cfg
 A pesar de que hasta este punto ya tenemos una instalacion casi completada, aun no tenemos los directorios comunes como **Escritorio**, **Descargas**, etc. Entonces para la creacion de estos seguimos los siguientes pasos.
 1. Instala el paquete 
         ```
-        xdg-users-dirs
+        xdg-user-dirs
         ```.
 2. Para actualizar los directorios del usuario **root** solo ejecutamos el siguiente comando:
         ```
