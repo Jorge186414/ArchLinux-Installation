@@ -244,7 +244,7 @@ A pesar de que hasta este punto ya tenemos una instalacion casi completada, aun 
         xdg-user-dirs-update
         ```. Y para actualizar los del usuario que creamos en pasos anteriores ejecutamos lo siguiente: 
         ```
-        nu nombre_usuario -c ""xdg-user-dirs-update"
+        su nombre_usuario -c ""xdg-user-dirs-update"
         ```
 ## Controlador de Audio y de Video.
 ### Instalaciones recomentadas.
