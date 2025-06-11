@@ -274,4 +274,9 @@ sudo pacman -S xf86-video-vesa xf86-video-fbdev
 ```
 
 ### Controlador de Audio.
-Los controladores de audio son un poco mas estandar, entonces no va a afectar el tipo de procesador que tengas 
+Los controladores de audio son un poco mas estandar, entonces no va a afectar el tipo de procesador que tengas, de estos existen varios entre los que estan PipeWire, Alsa, PulseAudio entre otros, puedes buscar mas informacion acerca de estos en el siguiente [link](https://wiki.archlinux.org/title/Sound_system).
+
+En mi caso instalare Pipewire
+```
+sudo pacman -S pipewire pipewire-audio gst-plugin-pipewire pipewire-alsa pipewire-jack pipewire-pulse
+```
